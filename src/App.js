@@ -16,11 +16,20 @@ const App = () => {
         )
     }, [])
 
+    useEffect(() => {
+        const loggedUser = window.localStorage.getItem('loggedAppUser')
+        if (loggedUser) {
+            const user = JSON.stringify(loggedUser)
+            setUser(user)
+        }
+    }, [])
+
     const handleLogin = async (event) => {
         event.preventDefault()
 
         try {
             const user = await loginService.login({username, password})
+            window.localStorage.setItem('loggedAppUser', JSON.stringify(user))
             setUser(user)
             setUsername('')
             setPassword('')
@@ -53,10 +62,17 @@ const App = () => {
         </form>
     }
 
+    const clearToken = () => {
+        setUser(null)
+        return window.localStorage.clear()
+    }
+
     const blogForm = () => {
         return <div>
             <h2>blogs</h2>
-            <p>{user.name} logged in</p>
+            <div>{user.name} logged in
+                <button onClick={clearToken}>logout</button>
+            </div>
             {blogs.map(blog =>
                 <Blog key={blog.id} blog={blog}/>
             )}
