@@ -11,7 +11,7 @@ const App = () => {
     const [url, setUrl] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState(null)
+    const [notification, setNotification] = useState(null)
     const [user, setUser] = useState(null)
 
     useEffect(() => {
@@ -40,8 +40,10 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch (exception) {
-            setError('Wrong credentials')
-            setTimeout(() => setError(null), 5000)
+            addNotification({
+                message: 'wrong username or password',
+                type: 'error'
+            })
         }
     }
 
@@ -54,9 +56,18 @@ const App = () => {
         }
         const savedBlog = await blogService.create(newBlog)
         setBlogs(blogs.concat(savedBlog))
+        addNotification({
+            message: `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
+            type: 'notification'
+        })
         setTitle('')
         setAuthor('')
         setUrl('')
+    }
+
+    const addNotification = (notification) => {
+        setNotification(notification)
+        setTimeout(() => setNotification(null), 3000)
     }
 
     const handleBlogTitleChange = (event) => {
@@ -74,6 +85,7 @@ const App = () => {
     const loginForm = () => {
         return <form onSubmit={handleLogin}>
             <h2>log in to application</h2>
+            <Notification notification={notification}/>
             <div>
                 username
                 <input type="text"
@@ -116,6 +128,7 @@ const App = () => {
     const blogForm = () => {
         return <div>
             <h2>blogs</h2>
+            <Notification notification={notification}/>
             <div>{user.name} logged in
                 <button onClick={clearToken}>logout</button>
             </div>
