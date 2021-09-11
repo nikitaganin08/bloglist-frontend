@@ -33,12 +33,12 @@ const BlogForm = ({ createBlog }) => {
     }
 
     return (
-        <div>
+        <div className='formDiv'>
             <h2>create new</h2>
             <form onSubmit={addBlog}>
-                <div>title: <input value={title} onChange={handleBlogTitleChange}/></div>
-                <div>author: <input value={author} onChange={handleBlogAuthorChange}/></div>
-                <div>url: <input value={url} onChange={handleBlogUrlChange}/></div>
+                <div>title: <input id='title' value={title} onChange={handleBlogTitleChange}/></div>
+                <div>author: <input id='author' value={author} onChange={handleBlogAuthorChange}/></div>
+                <div>url: <input id='url' value={url} onChange={handleBlogUrlChange}/></div>
                 <div>
                     <button type="submit">create</button>
                 </div>
