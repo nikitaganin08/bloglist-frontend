@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const Blog = ({ blog }) => {
     return (
-        <div>
+        <div className='blog'>
             {blog.title} {blog.author}
         </div>
     )
