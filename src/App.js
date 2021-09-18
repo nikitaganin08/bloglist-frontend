@@ -15,17 +15,14 @@ const App = () => {
     const blogFormRef = useRef()
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs(blogs)
-        )
-    }, [])
-
-    useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedAppUser')
         if (loggedUser) {
             const user = JSON.parse(loggedUser)
             setUser(user)
             blogService.setToken(user.token)
+            blogService.getAll().then(blogs =>
+                setBlogs(blogs)
+            )
         }
     }, [])
 
