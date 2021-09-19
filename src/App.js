@@ -5,6 +5,7 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/logins'
 import Toggleable from './components/Toggleable'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -59,30 +60,6 @@ const App = () => {
         setTimeout(() => setNotification(null), 3000)
     }
 
-    const loginForm = () => {
-        return <form onSubmit={handleLogin}>
-            <h2>log in to application</h2>
-            <Notification notification={notification}/>
-            <div>
-                username
-                <input type="text"
-                    value={username}
-                    name="Username"
-                    onChange={({ target }) => setUsername(target.value)}/>
-            </div>
-            <div>
-                password
-                <input
-                    type="password"
-                    value={password}
-                    name="Password"
-                    onChange={({ target }) => setPassword(target.value)}
-                />
-            </div>
-            <button type="submit">login</button>
-        </form>
-    }
-
     const creatingBlogForm = () => {
         return (
             <Toggleable buttonLabel = 'create new blog' ref={blogFormRef}>
@@ -99,7 +76,6 @@ const App = () => {
     const blogForm = () => {
         return <div>
             <h2>blogs</h2>
-            <Notification notification={notification}/>
             <div>{user.name} logged in
                 <button onClick={clearToken}>logout</button>
             </div>
@@ -110,8 +86,18 @@ const App = () => {
         </div>
     }
 
+    const loginForm = () => {
+        return <LoginForm
+            handleLogin={handleLogin}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            username={username}
+            password={password} />
+    }
+
     return (
         <div>
+            <Notification notification={notification}/>
             {user === null ?
                 loginForm() :
                 blogForm()}
