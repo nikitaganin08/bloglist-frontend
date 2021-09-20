@@ -55,5 +55,22 @@ describe('Blog app', function() {
                 .should('have.css', 'color', 'rgb(0, 128, 0)')
             cy.contains('test blog title test blog author')
         })
+
+        describe('and a blog exists', function () {
+            beforeEach(function () {
+                cy.contains('create new blog').click()
+                cy.get('#title').type('test blog title')
+                cy.get('#author').type('test blog author')
+                cy.get('#url').type('test blog url')
+                cy.get('#create-button').click()
+            })
+
+            it('it can be made liked', function () {
+                cy.contains('likes 0')
+                    .contains('like')
+                    .click()
+                cy.contains('likes 1')
+            })
+        })
     })
 })

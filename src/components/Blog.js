@@ -1,10 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, toggleLike }) => {
     return (
         <div className='blog'>
-            {blog.title} {blog.author}
+            <div>
+                {blog.title} {blog.author}
+            </div>
+            <div>likes {blog.likes}
+                <button onClick={toggleLike}>like</button>
+            </div>
         </div>
     )
 }
