@@ -54,7 +54,7 @@ describe('Blog app', function() {
 
             it('it can be made liked', function () {
                 cy.contains('likes 0')
-                    .contains('like')
+                    .contains('button', 'like')
                     .click()
                 cy.contains('likes 1')
             })
@@ -62,6 +62,20 @@ describe('Blog app', function() {
             it('it can be deleted by creator', function () {
                 cy.contains('remove').click()
                 !cy.contains('testTitle testAuthor')
+            })
+
+            it('blogs sorted in descending order', function () {
+                cy.createBlog({ title: 'secondTitle', author: 'secondAuthor', url: 'testUrl', likes: 2 })
+                cy.createBlog({ title: 'thirdTitle', author: 'thirdAuthor', url: 'testUrl', likes: 3 })
+
+                cy.get('.blog').then(blogs => {
+                    let previous = Number.MAX_VALUE
+                    blogs.map((i, el) => {
+                        const likes = parseInt(el.getElementsByClassName('likes').item(0).textContent)
+                        cy.wrap(likes).should('be.lte', previous)
+                        previous = likes
+                    })
+                })
             })
 
             describe('When logged in other user', function() {

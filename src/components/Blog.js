@@ -17,7 +17,9 @@ const Blog = ({ blog, toggleLike, toggleDelete, loggedUser }) => {
             <div>
                 {blog.title} {blog.author}
             </div>
-            <div>likes {blog.likes}
+            <div>
+                <span>likes </span>
+                <span className='likes'>{blog.likes}</span>
                 <button onClick={toggleLike}>like</button>
             </div>
             <div>{blog.user.name}</div>

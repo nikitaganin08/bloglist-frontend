@@ -80,14 +80,16 @@ const App = () => {
                 <button onClick={clearToken}>logout</button>
             </div>
             {creatingBlogForm()}
-            {blogs.map(blog =>
-                <Blog key={blog.id}
-                    blog={blog}
-                    toggleLike={() => toggleLike(blog.id)}
-                    toggleDelete={() => toggleDelete(blog.id)}
-                    loggedUser={user}
-                />
-            )}
+            {blogs
+                .sort((blog, nextBlog) => nextBlog.likes - blog.likes)
+                .map(blog =>
+                    <Blog key={blog.id}
+                        blog={blog}
+                        toggleLike={() => toggleLike(blog.id)}
+                        toggleDelete={() => toggleDelete(blog.id)}
+                        loggedUser={user}
+                    />
+                )}
         </div>
     }
 
