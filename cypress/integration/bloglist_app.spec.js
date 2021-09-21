@@ -1,14 +1,7 @@
 describe('Blog app', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3003/api/testing/reset')
-
-        const user = {
-            name: 'Test test',
-            username: 'testUser',
-            password: 'testPassword'
-        }
-        cy.request('POST', 'http://localhost:3003/api/users', user)
-        cy.visit('http://localhost:3000')
+        cy.createUser({ name: 'TestUser', username: 'testUser', password: 'testPassword' })
     })
 
     it('Login form is shown', function() {
@@ -24,7 +17,7 @@ describe('Blog app', function() {
             cy.get('#password').type('testPassword')
             cy.get('#login-button').click()
 
-            cy.contains('Test test logged in')
+            cy.contains('TestUser logged in')
         })
 
         it('fails with wrong credentials', function() {
@@ -39,9 +32,7 @@ describe('Blog app', function() {
 
     describe('When logged in', function() {
         beforeEach(function() {
-            cy.get('#username').type('testUser')
-            cy.get('#password').type('testPassword')
-            cy.get('#login-button').click()
+            cy.login({ username: 'testUser', password: 'testPassword' })
         })
 
         it('A blog can be created', function() {
@@ -58,11 +49,7 @@ describe('Blog app', function() {
 
         describe('and a blog exists', function () {
             beforeEach(function () {
-                cy.contains('create new blog').click()
-                cy.get('#title').type('test blog title')
-                cy.get('#author').type('test blog author')
-                cy.get('#url').type('test blog url')
-                cy.get('#create-button').click()
+                cy.createBlog({ title: 'testTitle', author: 'testAuthor', url: 'testUrl' })
             })
 
             it('it can be made liked', function () {
@@ -70,6 +57,23 @@ describe('Blog app', function() {
                     .contains('like')
                     .click()
                 cy.contains('likes 1')
+            })
+
+            it('it can be deleted by creator', function () {
+                cy.contains('remove').click()
+                !cy.contains('testTitle testAuthor')
+            })
+
+            describe('When logged in other user', function() {
+                beforeEach(function() {
+                    cy.createUser({ name: 'TestUser2', username: 'testUser2', password: 'testPassword2' })
+                    cy.contains('logout').click()
+                    cy.login({ username: 'testUser2', password: 'testPassword2' })
+                })
+
+                it('blog cannot be deleted by other user', function () {
+                    !cy.contains('remove')
+                })
             })
         })
     })

@@ -81,7 +81,12 @@ const App = () => {
             </div>
             {creatingBlogForm()}
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} toggleLike={() => toggleLike(blog.id)}/>
+                <Blog key={blog.id}
+                    blog={blog}
+                    toggleLike={() => toggleLike(blog.id)}
+                    toggleDelete={() => toggleDelete(blog.id)}
+                    loggedUser={user}
+                />
             )}
         </div>
     }
@@ -107,6 +112,21 @@ const App = () => {
                 message: `Blog '${blog.content}' was already removed from server`,
                 type: 'error'
             })
+        }
+    }
+
+    const toggleDelete = async id => {
+        const blogToRemove = blogs.find(b => b.id === id)
+        if (window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
+            try {
+                await blogService.remove(id)
+                setBlogs(blogs.filter(blog => blog.id !== id))
+            } catch (exception) {
+                addNotification({
+                    message: `Blog '${blogToRemove.content}' was already removed from server`,
+                    type: 'error'
+                })
+            }
         }
     }
 
