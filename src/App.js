@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -6,12 +6,14 @@ import blogService from './services/blogs'
 import loginService from './services/logins'
 import Toggleable from './components/Toggleable'
 import LoginForm from './components/LoginForm'
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
+    const dispatch = useDispatch()
     const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [notification, setNotification] = useState(null)
     const [user, setUser] = useState(null)
     const blogFormRef = useRef()
 
@@ -38,10 +40,10 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch (exception) {
-            addNotification({
+            dispatch(setNotification({
                 message: 'wrong username or password',
                 type: 'error'
-            })
+            }, 3))
         }
     }
 
@@ -49,20 +51,15 @@ const App = () => {
         blogFormRef.current.toggleVisibility()
         const savedBlog = await blogService.create(newBlog)
         setBlogs(blogs.concat(savedBlog))
-        addNotification({
+        dispatch(setNotification({
             message: `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
             type: 'notification'
-        })
-    }
-
-    const addNotification = (notification) => {
-        setNotification(notification)
-        setTimeout(() => setNotification(null), 3000)
+        }, 3))
     }
 
     const creatingBlogForm = () => {
         return (
-            <Toggleable buttonLabel = 'create new blog' ref={blogFormRef}>
+            <Toggleable buttonLabel='create new blog' ref={blogFormRef}>
                 <BlogForm createBlog={createBlog}/>
             </Toggleable>
         )
@@ -99,7 +96,7 @@ const App = () => {
             handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
             username={username}
-            password={password} />
+            password={password}/>
     }
 
     const toggleLike = async id => {
@@ -109,11 +106,11 @@ const App = () => {
         try {
             const updatedBlog = await blogService.update(id, changedBlog)
             setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
-        } catch(exception) {
-            addNotification({
+        } catch (exception) {
+            dispatch(setNotification({
                 message: `Blog '${blog.content}' was already removed from server`,
                 type: 'error'
-            })
+            }, 3))
         }
     }
 
@@ -124,17 +121,17 @@ const App = () => {
                 await blogService.remove(id)
                 setBlogs(blogs.filter(blog => blog.id !== id))
             } catch (exception) {
-                addNotification({
+                dispatch(setNotification({
                     message: `Blog '${blogToRemove.content}' was already removed from server`,
                     type: 'error'
-                })
+                }, 3))
             }
         }
     }
 
     return (
         <div>
-            <Notification notification={notification}/>
+            <Notification/>
             {user === null ?
                 loginForm() :
                 blogForm()}
