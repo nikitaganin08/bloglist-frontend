@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/logins'
-import Toggleable from './components/Toggleable'
 import LoginForm from './components/LoginForm'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
@@ -14,8 +13,6 @@ const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
-    const blogFormRef = useRef()
-
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedAppUser')
         if (loggedUser) {
@@ -42,15 +39,6 @@ const App = () => {
             }, 3))
         }
     }
-
-    const creatingBlogForm = () => {
-        return (
-            <Toggleable buttonLabel='create new blog' ref={blogFormRef}>
-                <BlogForm/>
-            </Toggleable>
-        )
-    }
-
     const clearToken = () => {
         setUser(null)
         return window.localStorage.clear()
@@ -62,7 +50,7 @@ const App = () => {
             <div>{user.name} logged in
                 <button onClick={clearToken}>logout</button>
             </div>
-            {creatingBlogForm()}
+            <BlogForm/>
             <BlogList/>
         </div>
     }
