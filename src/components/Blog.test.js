@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import Blog from './Blog'
+import BlogList from './BlogList'
 import { render } from '@testing-library/react'
 
 test('renders content', () => {
@@ -11,7 +11,7 @@ test('renders content', () => {
     }
 
     const component = render(
-        <Blog blog={blog}/>
+        <BlogList blog={blog}/>
     )
 
     const div = component.container.querySelector('.blog')
