@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import { clearUser, updateLoggedUser } from './reducers/userReducer'
+import { clearUser, updateLoggedUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
+import UserList from './components/UserList'
+import { Route, Switch } from 'react-router-dom'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -16,8 +18,8 @@ const App = () => {
         }
     }, [dispatch])
 
-    const user = useSelector(({ user }) => {
-        return user
+    const user = useSelector(({ loggedUser }) => {
+        return loggedUser
     })
 
     const blogForm = () => {
@@ -27,7 +29,14 @@ const App = () => {
                 <button onClick={() => dispatch(clearUser())}>logout</button>
             </div>
             <BlogForm/>
-            <BlogList/>
+            <Switch>
+                <Route path='/users'>
+                    <UserList/>
+                </Route>
+                <Route path='/'>
+                    <BlogList/>
+                </Route>
+            </Switch>
         </div>
     }
     return (
