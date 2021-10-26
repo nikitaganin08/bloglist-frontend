@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import { clearUser, updateLoggedUser } from './reducers/loginReducer'
+import { updateLoggedUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
@@ -9,6 +9,7 @@ import UserList from './components/UserList'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import User from './components/User'
 import Blog from './components/Blog'
+import Menu from './components/Menu'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -45,10 +46,8 @@ const App = () => {
 
     const blogForm = () => {
         return <div>
-            <h2>blogs</h2>
-            <div>{loggedUser.name} logged in
-                <button onClick={() => dispatch(clearUser())}>logout</button>
-            </div>
+            <Menu loggedUser={loggedUser}/>
+            <h2>blog app</h2>
             <BlogForm/>
             <Switch>
                 <Route path='/blogs/:id'>
