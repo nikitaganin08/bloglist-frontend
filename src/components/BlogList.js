@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initBlogs, likeBlog, removeBlog } from '../reducers/blogReducer'
-import { setNotification } from '../reducers/notificationReducer'
+import { initBlogs } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const BlogList = () => {
     const blogStyle = {
@@ -21,51 +21,12 @@ const BlogList = () => {
         return blogs.sort((blog, nextBlog) => nextBlog.likes - blog.likes)
     })
 
-    const showRemoveButton = (blog) => {
-        return { display: blog.user.username === blog.user.username ? '' : 'none' }
-    }
-
-    const like = (blog) => {
-        try {
-            dispatch(likeBlog(blog))
-        } catch (exception) {
-            dispatch(setNotification({
-                message: `Blog '${blog.content}' was already removed from server`,
-                type: 'error'
-            }, 3))
-        }
-    }
-
-    const remove = (blog) => {
-        if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-            try {
-                dispatch(removeBlog(blog.id))
-            } catch (exception) {
-                dispatch(setNotification({
-                    message: `Blog '${blog.content}' was already removed from server`,
-                    type: 'error'
-                }, 3))
-            }
-        }
-    }
-
     return (
         <div>
             {blogs.sort((blog, nextBlog) => nextBlog.likes - blog.likes)
                 .map(blog =>
                     <div key={blog.id} className='blog' style={blogStyle}>
-                        <div>
-                            {blog.title} {blog.author}
-                        </div>
-                        <div>
-                            <span>likes </span>
-                            <span className='likes'>{blog.likes}</span>
-                            <button onClick={() => like(blog)}>like</button>
-                        </div>
-                        <div>{blog.user.name}</div>
-                        <div style={showRemoveButton(blog)}>
-                            <button onClick={() => remove(blog)}>remove</button>
-                        </div>
+                        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
                     </div>)
             }
         </div>

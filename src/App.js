@@ -8,6 +8,7 @@ import BlogForm from './components/BlogForm'
 import UserList from './components/UserList'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import User from './components/User'
+import Blog from './components/Blog'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -32,6 +33,16 @@ const App = () => {
         ? users.find(user => user.id === match.params.id)
         : null
 
+
+    const blogs = useSelector(({ blogs }) => {
+        return blogs
+    })
+
+    const matchBlog = useRouteMatch('/blogs/:id')
+    const blog = matchBlog
+        ? blogs.find(blog => blog.id === matchBlog.params.id)
+        : null
+
     const blogForm = () => {
         return <div>
             <h2>blogs</h2>
@@ -40,6 +51,9 @@ const App = () => {
             </div>
             <BlogForm/>
             <Switch>
+                <Route path='/blogs/:id'>
+                    <Blog blog={blog}/>
+                </Route>
                 <Route path='/users/:id'>
                     <User user={user}/>
                 </Route>
