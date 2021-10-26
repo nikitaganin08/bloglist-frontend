@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import UserList from './components/UserList'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import User from './components/User'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -18,18 +19,30 @@ const App = () => {
         }
     }, [dispatch])
 
-    const user = useSelector(({ loggedUser }) => {
+    const loggedUser = useSelector(({ loggedUser }) => {
         return loggedUser
     })
+
+    const users = useSelector(({ users }) => {
+        return users
+    })
+
+    const match = useRouteMatch('/users/:id')
+    const user = match
+        ? users.find(user => user.id === match.params.id)
+        : null
 
     const blogForm = () => {
         return <div>
             <h2>blogs</h2>
-            <div>{user.name} logged in
+            <div>{loggedUser.name} logged in
                 <button onClick={() => dispatch(clearUser())}>logout</button>
             </div>
             <BlogForm/>
             <Switch>
+                <Route path='/users/:id'>
+                    <User user={user}/>
+                </Route>
                 <Route path='/users'>
                     <UserList/>
                 </Route>
@@ -42,7 +55,7 @@ const App = () => {
     return (
         <div>
             <Notification/>
-            {user.length === 0 ? <LoginForm/> : blogForm()}
+            {loggedUser.length === 0 ? <LoginForm/> : blogForm()}
         </div>
     )
 }

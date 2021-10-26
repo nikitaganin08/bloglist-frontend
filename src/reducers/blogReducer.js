@@ -34,7 +34,6 @@ export const createBlog = (newBlog) => {
 export const removeBlog = (id) => {
     return async dispatch => {
         await blogService.remove(id)
-        console.log(id)
         dispatch({
             type: 'REMOVE_BLOG',
             data: id
