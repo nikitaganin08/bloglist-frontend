@@ -4,7 +4,6 @@ import LoginForm from './components/LoginForm'
 import { updateLoggedUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import BlogList from './components/BlogList'
-import BlogForm from './components/BlogForm'
 import UserList from './components/UserList'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import User from './components/User'
@@ -47,8 +46,6 @@ const App = () => {
     const blogForm = () => {
         return <div>
             <Menu loggedUser={loggedUser}/>
-            <h2>blog app</h2>
-            <BlogForm/>
             <Switch>
                 <Route path='/blogs/:id'>
                     <Blog blog={blog}/>
@@ -66,7 +63,7 @@ const App = () => {
         </div>
     }
     return (
-        <div>
+        <div className="container">
             <Notification/>
             {loggedUser.length === 0 ? <LoginForm/> : blogForm()}
         </div>

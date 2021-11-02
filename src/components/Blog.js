@@ -1,7 +1,7 @@
 import React from 'react'
 import { commentBlog, likeBlog } from '../reducers/blogReducer'
-import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
+import { Button, Form } from 'react-bootstrap'
 
 const Blog = ({ blog }) => {
 
@@ -11,27 +11,9 @@ const Blog = ({ blog }) => {
 
     const dispatch = useDispatch()
 
-    const like = (blog) => {
-        try {
-            dispatch(likeBlog(blog))
-        } catch (exception) {
-            dispatch(setNotification({
-                message: `Blog '${blog.content}' was already removed from server`,
-                type: 'error'
-            }, 3))
-        }
-    }
-
     const comment = (event, blog) => {
         event.preventDefault()
-        try {
-            dispatch(commentBlog(blog, event.target.comment.value))
-        } catch (exception) {
-            dispatch(setNotification({
-                message: `Blog '${blog.content}' was already removed from server`,
-                type: 'error'
-            }, 3))
-        }
+        dispatch(commentBlog(blog, event.target.comment.value))
     }
 
     return (
@@ -41,21 +23,22 @@ const Blog = ({ blog }) => {
             <div>
                 <span className='likes'>{blog.likes}</span>
                 <span> likes</span>
-                <button onClick={() => like(blog)}>like</button>
+                <button onClick={() => dispatch(likeBlog(blog))}>like</button>
                 <div>added by {blog.user.name}</div>
             </div>
             <h2>comments</h2>
-            <form onSubmit={event => comment(event, blog)}>
-                <div>
-                    <input
-                        id="comment"
-                        type="text"/>
-                    <button id="comment-button" type="submit">add comment</button>
-                </div>
-            </form>
-            <ul>
+            <Form onSubmit={event => comment(event, blog)}>
+                <Form.Group>
+                    <Form.Control type="text"
+                        name="comment"/>
+                    <Button variant="primary" type="submit">
+                        add comment
+                    </Button>
+                </Form.Group>
+            </Form>
+            <ul className="list-group">
                 {blog.comments.map(comment =>
-                    <li key={comment.id}>{comment.comment}</li>
+                    <li className="list-group-item" key={comment.id}>{comment.comment}</li>
                 )}
             </ul>
         </div>

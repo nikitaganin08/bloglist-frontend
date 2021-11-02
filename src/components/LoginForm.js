@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { setNotification } from '../reducers/notificationReducer'
 import { loginUser } from '../reducers/loginReducer'
+import { Button, Form } from 'react-bootstrap'
 
 const LoginForm = () => {
 
@@ -9,36 +9,31 @@ const LoginForm = () => {
 
     const login = async (event) => {
         event.preventDefault()
-        try {
-            const username = event.target.username.value
-            const password = event.target.password.value
+        const username = event.target.username.value
+        const password = event.target.password.value
 
-            dispatch(loginUser(username, password))
-        } catch (exception) {
-            dispatch(setNotification({
-                message: 'wrong username or password',
-                type: 'error'
-            }, 3))
-        }
+        dispatch(loginUser(username, password))
     }
 
     return (
-        <form onSubmit={login}>
+        <div>
             <h2>log in to application</h2>
-            <div>
-                username
-                <input
-                    id="username"
-                    type="text"/>
-            </div>
-            <div>
-                password
-                <input
-                    id="password"
-                    type="password"/>
-            </div>
-            <button id="login-button" type="submit">login</button>
-        </form>
+            <Form onSubmit={login}>
+                <Form.Group>
+                    <Form.Label>username:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="username"/>
+                    <Form.Label>password:</Form.Label>
+                    <Form.Control
+                        type="password"
+                        name="password"/>
+                    <Button variant="primary" type="submit">
+                        login
+                    </Button>
+                </Form.Group>
+            </Form>
+        </div>
     )
 }
 

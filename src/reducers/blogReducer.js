@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import { setNotification } from './notificationReducer'
 
 const reducer = (state = [], action) => {
     switch (action.type) {
@@ -49,22 +50,36 @@ export const removeBlog = (id) => {
 
 export const likeBlog = (blog) => {
     return async dispatch => {
-        const updateBlog = await blogService.update(blog)
-        dispatch({
-            type: 'LIKE',
-            data: updateBlog
-        })
+        try {
+            const updateBlog = await blogService.update(blog)
+            dispatch({
+                type: 'LIKE',
+                data: updateBlog
+            })
+        } catch (exception) {
+            dispatch(setNotification({
+                message: `Blog '${blog.content}' was already removed from server`,
+                type: 'danger'
+            }, 3))
+        }
     }
 }
 
 export const commentBlog = (blog, comment) => {
     return async dispatch => {
-        const updateBlog = await blogService.comment(blog, comment)
-        console.log(updateBlog)
-        dispatch({
-            type: 'COMMENT',
-            data: updateBlog
-        })
+        try {
+            const updateBlog = await blogService.comment(blog, comment)
+            console.log(updateBlog)
+            dispatch({
+                type: 'COMMENT',
+                data: updateBlog
+            })
+        } catch (exception) {
+            dispatch(setNotification({
+                message: `Blog '${blog.content}' was already removed from server`,
+                type: 'danger'
+            }, 3))
+        }
     }
 }
 

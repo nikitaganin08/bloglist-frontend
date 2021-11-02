@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import Toggleable from './Toggleable'
+import { Button, Form } from 'react-bootstrap'
 
 const BlogForm = () => {
 
@@ -24,7 +25,7 @@ const BlogForm = () => {
         dispatch(createBlog(newBlog))
         dispatch(setNotification({
             message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
-            type: 'notification'
+            type: 'success'
         }, 3))
     }
 
@@ -32,14 +33,22 @@ const BlogForm = () => {
         <Toggleable buttonLabel='create new blog' ref={blogFormRef}>
             <div className='formDiv'>
                 <h2>create new</h2>
-                <form onSubmit={addBlog}>
-                    <div>title: <input id='title'/></div>
-                    <div>author: <input id='author'/></div>
-                    <div>url: <input id='url'/></div>
-                    <div>
-                        <button id="create-button" type="submit">create</button>
-                    </div>
-                </form>
+                <Form onSubmit={addBlog}>
+                    <Form.Group>
+                        <Form.Label>title:</Form.Label>
+                        <Form.Control type="text"
+                            name="title"/>
+                        <Form.Label>author:</Form.Label>
+                        <Form.Control type="text"
+                            name="author"/>
+                        <Form.Label>url:</Form.Label>
+                        <Form.Control type="text"
+                            name="url"/>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        create
+                    </Button>
+                </Form>
             </div>
         </Toggleable>
     )
